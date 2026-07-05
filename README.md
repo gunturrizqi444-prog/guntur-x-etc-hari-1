@@ -9,25 +9,25 @@ Pengajar: Faisal "Zexo" — Founder ETHJKT (Ethereum Jakarta)
 ## BACA INI H-1 (Sehari Sebelum Kelas)
 
 Halo. Ini panduan persiapan. Tujuannya satu: pas hari pertama,
-laptop lo udah SIAP, jadi kita nggak buang 2 jam cuma buat install-install.
+laptop kalian udah SIAP, jadi kita nggak buang 2 jam cuma buat install-install.
 
 Kerjain semua langkah di bawah SEBELUM hari-H. Nggak lama, kok
 santai sekitar 30-45 menit. Kalau nyangkut, catat errornya, nanti
 kita beresin bareng.
 
-Prinsip course ini biar lo tau dari awal:
+Prinsip course ini biar kalian tau dari awal:
 
     AI = tukang ketik. Kamu = pilot.
     Dinilai dari "bisa jelasin & verifikasi kode AI",
     BUKAN dari "kodenya jalan".
 
-Jadi tenang, lo nggak dituntut jago sintaks. Lo dituntut PAHAM.
+Jadi tenang, kalian nggak dituntut jago sintaks. Kalian dituntut PAHAM.
 
 ---
 
 ## CHECKLIST PERSIAPAN
 
-Centang satu-satu. Kalau kelima ini beres, lo aman.
+Centang satu-satu. Kalau keenam ini beres, kalian aman.
 
 ```
 [ ] 1. Punya akun GitHub (buat simpan & pamer karya)
@@ -45,18 +45,18 @@ atau Linux semua bisa. Koneksi internet wajib.
 
 ## LANGKAH 1 — Akun GitHub
 
-GitHub itu tempat naruh kode online. Semua tugas & capstone lo
+GitHub itu tempat naruh kode online. Semua tugas & capstone kalian
 bakal disimpan di sini. Ini sekalian jadi PORTFOLIO + amunisi CV.
 
 1. Buka https://github.com/signup
 2. Isi email, bikin password, pilih username.
    TIPS username: pakai nama yang niat & profesional.
-   Ini bakal nempel di CV lo. Contoh: `faisal-dev`, bukan `xX_gamerz_Xx`.
+   Ini bakal nempel di CV kalian. Contoh: `faisal-dev`, bukan `xX_gamerz_Xx`.
 3. Verifikasi (klik teka-teki + cek email konfirmasi).
 4. Selesai. Simpan username + password baik-baik.
 
-Cek berhasil: lo bisa login di https://github.com dan lihat halaman
-profil kosong lo.
+Cek berhasil: kalian bisa login di https://github.com dan lihat halaman
+profil kosong kalian.
 
 ---
 
@@ -136,7 +136,7 @@ berarti SUKSES. `npm` ikut ke-install bareng Node otomatis.
 
 ## LANGKAH 4 — Install VSCode (Editor Kode)
 
-VSCode = tempat lo nulis & baca kode. Ada TERMINAL built-in-nya juga,
+VSCode = tempat kalian nulis & baca kode. Ada TERMINAL built-in-nya juga,
 jadi ngoding + jalanin perintah bisa di satu jendela. Ini yang bakal
 kita pakai sepanjang course.
 
@@ -153,13 +153,13 @@ Buka VSCode. Di menu atas: Terminal > New Terminal (atau tekan Ctrl + `
 tombol backtick, di pojok kiri atas keyboard). Muncul kotak hitam di
 bawah itu terminalnya. Semua perintah CLI kita jalanin di situ.
 
-Cek berhasil: VSCode kebuka DAN lo bisa munculin terminal di dalamnya.
+Cek berhasil: VSCode kebuka DAN kalian bisa munculin terminal di dalamnya.
 
 ---
 
 ## LANGKAH 5 — AI Coding CLI (WAJIB, jalan di terminal)
 
-Ini jantung course-nya. Gaya ngajar kita MEMBIASAKAN lo kerja lewat
+Ini jantung course-nya. Gaya ngajar kita MEMBIASAKAN kalian kerja lewat
 CLI (terminal), bukan cuma copy-paste dari web. Kenapa? Karena di
 dunia kerja beneran, engineer ngobrol sama AI langsung dari terminal,
 nempel di sebelah kodenya. Skill ini yang mau kita bangun.
@@ -170,7 +170,7 @@ tanpa kartu kredit.
 ### Rekomendasi utama: Codex CLI (gratis via akun ChatGPT)
 
 Codex CLI dari OpenAI GRATIS pakai akun ChatGPT biasa (plan Free, $0).
-Node.js udah lo install di Langkah 3, jadi tinggal:
+Node.js udah kalian install di Langkah 3, jadi tinggal:
 
 1. Bikin akun ChatGPT gratis di https://chatgpt.com (skip kalau udah punya).
 2. Install Codex CLI. Di terminal VSCode ketik:
@@ -212,7 +212,7 @@ Catatan: Gemini CLI udah dipensiun Google (Juni 2026), diganti
 Antigravity CLI. Kalau nemu tutorial "Gemini CLI", itu udah usang.
 
 PENTING SOAL KEAMANAN: hindari situs/proxy "AI gratis unlimited" yang
-minta lo tempel API key ke server mereka. Itu rawan dicuri. Cukup
+minta kalian tempel API key ke server mereka. Itu rawan dicuri. Cukup
 jalur resmi di atas.
 
 ---
@@ -237,7 +237,7 @@ Jalankan: codex    -> udah login (Sign in with ChatGPT sukses)
 ```
 
 Kalau empat perintah terminal keluar angka versi, VSCode jalan, DAN
-Codex CLI udah login, artinya laptop lo 100% SIAP. Mantap.
+Codex CLI udah login, artinya laptop kalian 100% SIAP. Mantap.
 
 ---
 
@@ -306,5 +306,33 @@ Capstone kita: "OnChain Menfess" papan menfess kampus yang tersimpan
 permanen di blockchain, dijaga AI moderator biar aman. Seru. Sampai
 ketemu di hari-H.
 
--- Zexo, ETHJKT
+---
+
+## SUMBER INFO (biar transparan)
+
+Info soal tool & harga di panduan ini diverifikasi dari sumber resmi
+per Juli 2026. Kalau ada yang berubah, cek link di bawah:
+
 ```
+- Codex CLI gratis via akun ChatGPT Free (OpenAI Help Center)
+  https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan
+
+- Cara install & sign-in Codex CLI (OpenAI Developers)
+  https://developers.openai.com/codex/cli
+
+- Perbandingan AI CLI gratis + info Gemini CLI dipensiun -> Antigravity
+  https://www.termdock.com/en/blog/free-ai-cli-tools-ranked
+
+- Download Node.js (versi LTS)
+  https://nodejs.org
+
+- Download Git
+  https://git-scm.com
+
+- Download VSCode
+  https://code.visualstudio.com
+```
+
+---
+
+-- Zexo, ETHJKT
