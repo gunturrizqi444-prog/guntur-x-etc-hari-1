@@ -63,6 +63,16 @@
 - Response API berupa array character dengan field seperti `name.en`, `status`, `height`, `blood_type`, `image_url`, dan `bounties`.
 - Header API tidak menampilkan `Access-Control-Allow-Origin`, tapi fetch tetap berhasil karena tidak butuh CORS (GET biasa).
 - Gambar karakter dari Fandom Wiki menggunakan JSONP (`callback=`) untuk bypass CORS — tested via curl dengan parameter `&callback=x` berhasil.
+## Fix: Image loading untuk semua karakter
+
+- **Bug fixed**: Regex `name.replace(/[^a-zA-Z0-9 ]/g, "")` sebelumnya menghapus titik pada nama seperti "Monkey D. Luffy" menjadi "Monkey D Luffy", menyebabkan Wiki API tidak menemukan halaman. Sekarang nama dikirim apa adanya tanpa sanitasi berlebihan.
+- **Search fallback**: Jika pencarian judul eksak gagal (`pageid === -1`), sistem otomatis melakukan `generator=search` untuk mencari halaman Wiki yang cocok (contoh: "Saint Marcus Mars" → ditemukan sebagai "Marcus Mars").
+- **Pre-fetch queue**: Semua gambar karakter di-pre-fetch di background setelah API dimuat (1 request per 400ms) agar saat ditarik gambarnya sudah siap.
+- **Bug fixed**: Variabel `rarity` di `animateConfetti()` sebelumnya undefined (scope error), sekarang menggunakan `currentConfettiRarity` global.
+- **Image cache**: Hasil lookup dicache di memori agar tidak memanggil API berulang untuk karakter yang sama.
+
+## Catatan Testing Lanjutan
+
 - Runtime smoke test lewat Node dengan mocked API berhasil.
 - Yang dicek:
   - Character pool dari API berisi banyak item.
@@ -74,3 +84,5 @@
   - Kartu hasil selalu menampilkan nama karakter.
   - Konfeti dan flash muncul sesuai rarity.
   - Gambar karakter muncul setelah fetch JSONP selesai.
+  - Karakter tanpa halaman Wiki eksak tetap dapat gambar via search fallback.
+  - Semua gambar di-pre-fetch di background setelah halaman dimuat.

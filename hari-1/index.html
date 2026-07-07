@@ -586,8 +586,10 @@
   let pity = 0;
   let total = 0;
   let ssrCount = 0;
-  let isLoadingImage = false;
   const imageCache = new Map();
+  const imageQueue = [];
+  let isProcessingQueue = false;
+  let currentConfettiRarity = "common";
 
   const card = document.getElementById("card");
   const avatar = document.getElementById("avatar");
@@ -686,58 +688,111 @@
     return { kelas: getRarityByBounty(character), character };
   }
 
-  // ---- Image loading via JSONP ----
+  // ---- Image loading via JSONP with search fallback ----
   function fetchImage(name) {
-    if (imageCache.has(name)) {
-      return Promise.resolve(imageCache.get(name));
-    }
     return new Promise(resolve => {
-      const safe = name.replace(/[^a-zA-Z0-9 ]/g, "").trim();
-      const cb = "opimg_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6);
-      window[cb] = data => {
-        delete window[cb];
-        const pages = data?.query?.pages;
-        if (pages) {
-          const page = Object.values(pages)[0];
-          if (page?.thumbnail?.source) {
-            imageCache.set(name, page.thumbnail.source);
-            resolve(page.thumbnail.source);
-            return;
+      if (imageCache.has(name)) {
+        resolve(imageCache.get(name));
+        return;
+      }
+      imageCache.set(name, null);
+
+      const cb = "opimg_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8);
+      const tryExact = () => {
+        window[cb] = data => {
+          delete window[cb];
+          const pages = data?.query?.pages;
+          if (pages) {
+            const page = Object.values(pages)[0];
+            if (page?.thumbnail?.source && page.pageid !== -1) {
+              imageCache.set(name, page.thumbnail.source);
+              resolve(page.thumbnail.source);
+              return;
+            }
           }
-        }
-        imageCache.set(name, null);
-        resolve(null);
+          trySearch();
+        };
+
+        const s = document.createElement("script");
+        s.src = "https://onepiece.fandom.com/api.php?action=query&titles=" +
+          encodeURIComponent(name) +
+          "&prop=pageimages&format=json&pithumbsize=300&callback=" + cb;
+        s.onerror = () => { delete window[cb]; trySearch(); };
+        document.head.appendChild(s);
+        setTimeout(() => {
+          if (window[cb]) { delete window[cb]; trySearch(); }
+        }, 5000);
       };
-      const s = document.createElement("script");
-      s.src = "https://onepiece.fandom.com/api.php?action=query&titles=" +
-        encodeURIComponent(safe) +
-        "&prop=pageimages&format=json&pithumbsize=300&callback=" + cb;
-      s.onerror = () => { delete window[cb]; imageCache.set(name, null); resolve(null); };
-      document.head.appendChild(s);
-      setTimeout(() => {
-        if (window[cb]) { delete window[cb]; imageCache.set(name, null); resolve(null); }
-      }, 6000);
+
+      const trySearch = () => {
+        const cb2 = cb + "_s";
+        window[cb2] = data => {
+          delete window[cb2];
+          const pages = data?.query?.pages;
+          if (pages) {
+            for (const id in pages) {
+              const page = pages[id];
+              if (page?.thumbnail?.source && page.ns === 0) {
+                imageCache.set(name, page.thumbnail.source);
+                resolve(page.thumbnail.source);
+                return;
+              }
+            }
+          }
+          resolve(null);
+        };
+
+        const s = document.createElement("script");
+        s.src = "https://onepiece.fandom.com/api.php?action=query&generator=search&gsrsearch=" +
+          encodeURIComponent(name) +
+          "&gsrlimit=3&gsrnamespace=0&prop=pageimages&pithumbsize=300&format=json&callback=" + cb2;
+        s.onerror = () => { delete window[cb2]; resolve(null); };
+        document.head.appendChild(s);
+        setTimeout(() => {
+          if (window[cb2]) { delete window[cb2]; resolve(null); }
+        }, 5000);
+      };
+
+      tryExact();
     });
   }
 
   function loadImage(name) {
-    if (isLoadingImage) return;
-    isLoadingImage = true;
+    const cached = imageCache.get(name);
+    if (cached) {
+      applyImage(name, cached);
+      return;
+    }
     fetchImage(name).then(url => {
-      if (url) {
-        const img = new Image();
-        img.onload = () => {
-          avatar.innerHTML = "";
-          avatar.appendChild(img);
-          avatarText.style.display = "none";
-          isLoadingImage = false;
-        };
-        img.onerror = () => { isLoadingImage = false; };
-        img.src = url;
-        img.alt = name;
-      } else {
-        isLoadingImage = false;
-      }
+      if (url) applyImage(name, url);
+    });
+  }
+
+  function applyImage(name, url) {
+    const img = new Image();
+    img.onload = () => {
+      avatar.innerHTML = "";
+      avatar.appendChild(img);
+    };
+    img.src = url;
+    img.alt = name;
+  }
+
+  function prefetchAllImages() {
+    for (const c of characters) {
+      const n = getName(c);
+      if (!imageCache.has(n)) imageQueue.push(n);
+    }
+    processImageQueue();
+  }
+
+  function processImageQueue() {
+    if (isProcessingQueue || imageQueue.length === 0) return;
+    isProcessingQueue = true;
+    const name = imageQueue.shift();
+    fetchImage(name).then(() => {
+      isProcessingQueue = false;
+      setTimeout(processImageQueue, 400);
     });
   }
 
@@ -747,6 +802,7 @@
   let confettiRunning = false;
 
   function launchConfetti(rarity) {
+    currentConfettiRarity = rarity;
     const colors = rarity === "legend"
       ? ["#f59e0b", "#fbbf24", "#fef3c7", "#d97706", "#fff"]
       : rarity === "epic"
@@ -778,7 +834,7 @@
   }
 
   function animateConfetti() {
-    const maxFrames = rarity === "legend" ? 150 : rarity === "epic" ? 120 : 90;
+    const maxFrames = currentConfettiRarity === "legend" ? 150 : currentConfettiRarity === "epic" ? 120 : 90;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     for (const p of confettiParticles) {
@@ -917,6 +973,7 @@
     renderPool();
     tarik1.disabled = false;
     tarik10.disabled = false;
+    prefetchAllImages();
   }
 
   tarik1.addEventListener("click", () => pull(1));
