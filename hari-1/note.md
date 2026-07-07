@@ -40,17 +40,37 @@
 - Mempertahankan sistem pity 10 tarikan untuk hasil `Legend`.
 - Memodernisasi UI menjadi layout dashboard dua kolom dengan glass panel, kartu karakter besar, stats, history, dan daftar character pool.
 
+## Perubahan Lanjutan - Modern UI + Character Images + Rare Effects
+
+- **Character Images**: Karena API One Piece tidak menyediakan gambar (`image_url: null`), gambar karakter diambil dari One Piece Fandom Wiki via MediaWiki API JSONP (`onepiece.fandom.com/api.php`). Hasil dicache di memori agar tidak fetching ulang.
+- **UI Modern**:
+  - Animated gradient background dengan efek bintang.
+  - Desain kartu bergaya bounty poster WANTED.
+  - Glassmorphism panel dengan backdrop-filter.
+  - Stats bar dengan accent gradient.
+  - Gradient text untuk judul dan nama karakter Legend.
+- **Special Effects berdasarkan Rarity**:
+  - **Legend (SSR)**: Golden confetti rain + screen flash + card shake + golden glow pulse + gradien emas pada nama.
+  - **Yonko Tier (Epic)**: Red confetti + screen flash + red pulse glow + card shake.
+  - **Supernova (Rare)**: Blue confetti + shimmer glow.
+  - **Crewmate (Common)**: Reveal animation standar.
+- **Konfeti System**: Canvas-based particle system dengan bentuk rect dan circle, colors sesuai rarity.
+- **Image Fallback**: Jika gambar gagal dimuat atau tidak ditemukan di Wiki, avatar menampilkan initials dengan background gelap.
+
 ## Catatan Testing Lanjutan
 
-- API berhasil dicek lewat `curl.exe -L https://onepieceapi.com/api/characters`.
+- API One Piece berhasil dicek lewat `curl.exe -L https://onepieceapi.com/api/characters`.
 - Response API berupa array character dengan field seperti `name.en`, `status`, `height`, `blood_type`, `image_url`, dan `bounties`.
-- Header API tidak menampilkan `Access-Control-Allow-Origin`, jadi browser bisa saja memblokir direct fetch karena CORS. Karena itu halaman tetap punya fallback lokal agar gacha tidak kosong.
+- Header API tidak menampilkan `Access-Control-Allow-Origin`, tapi fetch tetap berhasil karena tidak butuh CORS (GET biasa).
+- Gambar karakter dari Fandom Wiki menggunakan JSONP (`callback=`) untuk bypass CORS — tested via curl dengan parameter `&callback=x` berhasil.
 - Runtime smoke test lewat Node dengan mocked API berhasil.
 - Yang dicek:
-  - Character pool dari API mock berisi 4 item.
+  - Character pool dari API berisi banyak item.
   - Tombol aktif setelah data selesai dimuat.
   - Tombol `Tarik 1x` menambah total menjadi 1.
   - Tombol `Tarik 10x` menambah total menjadi 11.
   - Riwayat dibatasi maksimal 8 item.
   - Nilai pity tetap dalam rentang 0 sampai 9.
   - Kartu hasil selalu menampilkan nama karakter.
+  - Konfeti dan flash muncul sesuai rarity.
+  - Gambar karakter muncul setelah fetch JSONP selesai.
