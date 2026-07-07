@@ -21,3 +21,36 @@
   - Tombol `TARIK 10x` menambah total menjadi 11.
   - Riwayat tarikan terisi 11 chip.
   - Nilai pity tetap dalam rentang 0 sampai 9 setelah tarikan.
+
+## Perubahan Lanjutan - One Piece Character Gacha
+
+- Mengubah tema dari prize gacha ETHJKT menjadi One Piece character gacha.
+- Mengambil character pool dari `https://www.onepieceapi.com/api/characters` setelah endpoint awal redirect dari `https://onepieceapi.com/api/characters`.
+- Menambahkan fallback karakter lokal jika API gagal dimuat.
+- Mengubah kartu hasil gacha agar menampilkan:
+  - Nama karakter.
+  - Rarity berdasarkan bounty.
+  - Bounty, status, tinggi badan, dan blood type.
+  - Initial avatar jika API tidak menyediakan gambar.
+- Mengubah rarity menjadi:
+  - `Legend` untuk bounty minimal 1.000.000.000.
+  - `Yonko Tier` untuk bounty minimal 500.000.000.
+  - `Supernova` untuk bounty minimal 100.000.000.
+  - `Crewmate` untuk karakter tanpa bounty besar.
+- Mempertahankan sistem pity 10 tarikan untuk hasil `Legend`.
+- Memodernisasi UI menjadi layout dashboard dua kolom dengan glass panel, kartu karakter besar, stats, history, dan daftar character pool.
+
+## Catatan Testing Lanjutan
+
+- API berhasil dicek lewat `curl.exe -L https://onepieceapi.com/api/characters`.
+- Response API berupa array character dengan field seperti `name.en`, `status`, `height`, `blood_type`, `image_url`, dan `bounties`.
+- Header API tidak menampilkan `Access-Control-Allow-Origin`, jadi browser bisa saja memblokir direct fetch karena CORS. Karena itu halaman tetap punya fallback lokal agar gacha tidak kosong.
+- Runtime smoke test lewat Node dengan mocked API berhasil.
+- Yang dicek:
+  - Character pool dari API mock berisi 4 item.
+  - Tombol aktif setelah data selesai dimuat.
+  - Tombol `Tarik 1x` menambah total menjadi 1.
+  - Tombol `Tarik 10x` menambah total menjadi 11.
+  - Riwayat dibatasi maksimal 8 item.
+  - Nilai pity tetap dalam rentang 0 sampai 9.
+  - Kartu hasil selalu menampilkan nama karakter.
